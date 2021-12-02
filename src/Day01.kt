@@ -1,17 +1,32 @@
 fun main() {
-    fun part1(input: List<String>): Int {
-        return input.size
+
+    fun part1(input: List<Int>): Int {
+        var count = 0
+        for (i in 1 until input.size) {
+            if (input[i] > input[i - 1]) count++
+        }
+        return count
     }
 
-    fun part2(input: List<String>): Int {
-        return input.size
-    }
+    fun part2(input: List<Int>): Int {
+        fun getWindow(input: List<Int>, index: Int): Int = (1..3).sumOf { input[index - it] }
 
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
+        var count = 0
+        for (index in 4 until input.size + 1) {
+            val currentWindow = getWindow(input, index)
+            val prevWindow = getWindow(input, index - 1)
+            if (currentWindow > prevWindow) count++
+        }
+        return count
+
+
+    }
 
     val input = readInput("Day01")
-    println(part1(input))
-    println(part2(input))
+    val intInput = input.map { it.toInt() }
+    println(part1(intInput))
+    println(part2(intInput))
+
 }
+
+
