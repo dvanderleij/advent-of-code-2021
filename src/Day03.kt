@@ -35,7 +35,7 @@ fun main() {
 
     fun part2(input: List<String>): Int {
         val size = input[0].length
-        var oxygen = input.toList();
+        var oxygen = input.toList()
         var co2 = input.toList()
         for (i in 0 until size) {
             val oxygenOccurrences = occurrences(oxygen)
@@ -67,8 +67,8 @@ fun main() {
     }
 
 
-    val input = readInput("Day03")
-//    println(part1(input))
+    val input = readLines("Day03")
+    println(part1(input))
     println(part2(input))
 }
 

@@ -30,7 +30,7 @@ fun main() {
         }
         return depth * horizontal
     }
-    val input = readInput("Day02").map { it.split(" ") }.map { Pair(it[0], it[1].toInt()) }
+    val input = readLines("Day02").map { it.split(" ") }.map { Pair(it[0], it[1].toInt()) }
     println(part1(input))
     println(part2(input))
 }

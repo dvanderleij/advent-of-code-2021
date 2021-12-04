@@ -22,7 +22,7 @@ fun main() {
 
     }
 
-    val input = readInput("Day01")
+    val input = readLines("Day01")
     val intInput = input.map { it.toInt() }
     println(part1(intInput))
     println(part2(intInput))
