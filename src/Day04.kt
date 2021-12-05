@@ -1,4 +1,71 @@
 fun main() {
+    class Space(val number: Int, var set: Boolean) {
+
+        fun checkNumber(number: Int): Boolean {
+            if (!set && number == this.number) {
+                set = true
+                return true
+            }
+            return false
+        }
+
+        override fun toString(): String {
+            return "$number: $set"
+        }
+    }
+
+    // Could use counter and space that contains column and row but should be fine for this input size
+    class RowOrColumn(val line: List<Space>) {
+
+        fun checkAllSet(): Boolean {
+            for (space in line) {
+                if (!space.set) {
+                    return false
+                }
+            }
+            return true
+        }
+
+        fun checkNumber(number: Int): Boolean {
+            var wasChanged = false
+            for (space in line) {
+                val x = space.checkNumber(number)
+                if (x) {
+                    wasChanged = true
+                }
+            }
+            return wasChanged
+        }
+    }
+
+    class Board(private val rows: List<RowOrColumn>, private val columns: List<RowOrColumn>, var hasWon: Boolean = false) {
+        fun checkNumber(number: Int): Boolean {
+            for (row in rows) {
+                val wasChanged = row.checkNumber(number)
+                if (wasChanged) {
+                    val bingoRow = row.checkAllSet()
+                    if (bingoRow) {
+                        hasWon = true
+                        return true
+                    }
+                    for (column in columns) {
+                        val bingoColumn = column.checkAllSet()
+                        if (bingoColumn) {
+                            hasWon = true
+                            return true
+                        }
+                    }
+                }
+
+            }
+
+            return false
+        }
+
+        fun score(winningNumber: Int): Int =
+            rows.flatMap { it.line }.filter { !it.set }.sumOf { it.number } * winningNumber
+
+    }
 
     fun part1(input: Pair<List<Int>, List<Board>>): Int {
         for (number in input.first) {
@@ -42,7 +109,7 @@ fun main() {
                 column.add(row[i]);
             }
         }
-        return Board(rows.map { Line(it) }, columns.map { Line(it.toList()) })
+        return Board(rows.map { RowOrColumn(it) }, columns.map { RowOrColumn(it.toList()) })
     }
 
     fun parseInput(input: String): Pair<List<Int>, List<Board>> {
@@ -66,73 +133,4 @@ fun main() {
     val parsed = parseInput(input)
     println(part1(parsed))
     println(part2(parsed))
-}
-
-class Board(private val rows: List<Line>, private val columns: List<Line>, var hasWon: Boolean = false) {
-    fun checkNumber(number: Int): Boolean {
-        for (row in rows) {
-            val wasChanged = row.checkNumber(number)
-            if (wasChanged) {
-                val bingoRow = row.checkAllSet()
-                if (bingoRow) {
-                    hasWon = true
-                    return true
-                }
-                for (column in columns) {
-                    val bingoColumn = column.checkAllSet()
-                    if (bingoColumn) {
-                        hasWon = true
-                        return true
-                    }
-                }
-            }
-
-        }
-
-        return false
-    }
-
-    fun score(winningNumber: Int): Int =
-        rows.flatMap { it.line }.filter { !it.set }.sumOf { it.number } * winningNumber
-
-}
-
-// Could use counter and space that contains column and row but should be fine for this input size
-class Line(val line: List<Space>) {
-
-    fun checkAllSet(): Boolean {
-        for (space in line) {
-            if (!space.set) {
-                return false
-            }
-        }
-        return true
-    }
-
-    fun checkNumber(number: Int): Boolean {
-        var wasChanged = false
-        for (space in line) {
-            val x = space.checkNumber(number)
-            if (x) {
-                wasChanged = true
-            }
-        }
-        return wasChanged
-    }
-}
-
-
-class Space(val number: Int, var set: Boolean) {
-
-    fun checkNumber(number: Int): Boolean {
-        if (!set && number == this.number) {
-            set = true
-            return true
-        }
-        return false
-    }
-
-    override fun toString(): String {
-        return "$number: $set"
-    }
 }
